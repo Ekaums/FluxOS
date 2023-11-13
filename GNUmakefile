@@ -1,3 +1,6 @@
+CC = x86_64-elf-gcc
+LD = x86_64-elf-ld
+
 # Nuke built-in rules and variables.
 override MAKEFLAGS += -rR
  
@@ -89,10 +92,10 @@ override ASFILES := $(shell cd src && find -L * -type f -name '*.S')
 override NASMFILES := $(shell cd src && find -L * -type f -name '*.asm')
 override OBJ := $(addprefix obj/,$(CFILES:.c=.c.o) $(ASFILES:.S=.S.o) $(NASMFILES:.asm=.asm.o))
 override HEADER_DEPS := $(addprefix obj/,$(CFILES:.c=.c.d) $(ASFILES:.S=.S.d))
- 
+
 # Default target.
 .PHONY: all
-all: bin/$(KERNEL)
+all: bin/$(KERNEL) bootdisk
  
 # Link rules for the final kernel executable.
 bin/$(KERNEL): GNUmakefile linker.ld $(OBJ)
@@ -111,13 +114,29 @@ obj/%.c.o: src/%.c GNUmakefile
 obj/%.S.o: src/%.S GNUmakefile
 	mkdir -p "$$(dirname $@)"
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
- 
+
 # Compilation rules for *.asm (nasm) files.
 obj/%.asm.o: src/%.asm GNUmakefile
 	mkdir -p "$$(dirname $@)"
 	nasm $(NASMFLAGS) $< -o $@
  
+bootdisk:
+	dd if=/dev/zero bs=1M count=0 seek=64 of=image.hdd
+	sgdisk image.hdd -n 1\:2048 -t 1:ef00
+	./limine/limine bios-install image.hdd
+	mformat -i image.hdd@@1M
+	mmd -i image.hdd@@1M ::/EFI ::/EFI/BOOT
+	mcopy -i image.hdd@@1M bin/myos limine.cfg limine/limine-bios.sys ::/
+	mcopy -i image.hdd@@1M limine/BOOTX64.EFI ::/EFI/BOOT
+	mcopy -i image.hdd@@1M limine/BOOTIA32.EFI ::/EFI/BOOT
+
+qemu:
+	qemu-system-x86_64 -hda image.hdd
+
+
+
 # Remove object files and the final executable.
 .PHONY: clean
 clean:
 	rm -rf bin obj
+	rm -f image.hdd
