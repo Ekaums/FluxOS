@@ -10,7 +10,7 @@ uint64_t gdt[5];
 
 
 // setup.asm
-void *load_gdt(void);
+void load_gdt(void);
 void reload_registers(void);
 
 
