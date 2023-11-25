@@ -131,7 +131,7 @@ bootdisk:
 	mcopy -i image.hdd@@1M limine/BOOTIA32.EFI ::/EFI/BOOT
 
 qemu:
-	qemu-system-x86_64 -hda image.hdd
+	qemu-system-x86_64 -D qemutest.log -d int -M smm=off -hda image.hdd
 
 
 

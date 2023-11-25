@@ -4,6 +4,7 @@
 #include <limine.h>
 #include "serial/serial.h"
 #include "mem/mem.h"
+#include "gdt/gdt.h"
 
  
 LIMINE_BASE_REVISION(1)
@@ -37,6 +38,8 @@ void _start(void) {
 
     char *string = "\n \n Hello from FluxOS :) \n \n \n Totally not killing time at work";
     serial_print(PORT, string);
+
+    gdt_init();
 
     hcf(); // We're done, just hang...
 }
