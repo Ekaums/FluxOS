@@ -1,4 +1,4 @@
-global load_gdt
+global load_gdtr
 global reload_registers
 
 section .data
@@ -9,7 +9,7 @@ gdtr DW 0 ; For limit storage
 
 section .text
 
-load_gdt:
+load_gdtr:
 	lea rax, [rel gdtr]
 	mov   [rax], DI
 	mov   [rax+2], RSI
