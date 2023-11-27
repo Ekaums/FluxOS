@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <limine.h>
+
 #include "serial/serial.h"
 #include "mem/mem.h"
 #include "gdt/gdt.h"
@@ -35,11 +36,11 @@ void _start(void) {
         hcf();
     }
 
-
-    char *string = "\n \n Hello from FluxOS :) \n \n \n Totally not killing time at work";
-    serial_print(PORT, string);
-
+    serial_print(PORT, "Initializing GDT...\n\r");
     gdt_init();
+    serial_print(PORT, "Success.\n\n\r");
+
+    serial_print(PORT, "Welcome to FluxOS");
 
     hcf(); // We're done, just hang...
 }

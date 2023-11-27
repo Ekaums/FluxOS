@@ -4,4 +4,6 @@
 /.vscode
 .DS_Store
 image.hdd
+qemu.log
+bochslog.txt
 limine/

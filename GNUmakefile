@@ -18,21 +18,17 @@ define DEFAULT_VAR =
     endif
 endef
  
-# It is suggested to use a custom built cross toolchain to build a kernel.
-# We are using the standard "cc" here, it may work by using
-# the host system's toolchain, but this is not guaranteed.
 override DEFAULT_CC := cc
 $(eval $(call DEFAULT_VAR,CC,$(DEFAULT_CC)))
  
-# Same thing for "ld" (the linker).
 override DEFAULT_LD := ld
 $(eval $(call DEFAULT_VAR,LD,$(DEFAULT_LD)))
  
-# User controllable C flags.
+# C flags.
 override DEFAULT_CFLAGS := -g -O2 -pipe
 $(eval $(call DEFAULT_VAR,CFLAGS,$(DEFAULT_CFLAGS)))
  
-# User controllable C preprocessor flags. We set none by default.
+# C preprocessor flags. We set none by default.
 override DEFAULT_CPPFLAGS :=
 $(eval $(call DEFAULT_VAR,CPPFLAGS,$(DEFAULT_CPPFLAGS)))
  
@@ -44,7 +40,7 @@ $(eval $(call DEFAULT_VAR,NASMFLAGS,$(DEFAULT_NASMFLAGS)))
 override DEFAULT_LDFLAGS :=
 $(eval $(call DEFAULT_VAR,LDFLAGS,$(DEFAULT_LDFLAGS)))
  
-# Internal C flags that should not be changed by the user.
+# Internal C flags
 override CFLAGS += \
     -Wall \
     -Wextra \
@@ -62,14 +58,14 @@ override CFLAGS += \
     -mno-sse2 \
     -mno-red-zone
  
-# Internal C preprocessor flags that should not be changed by the user.
+# Internal C preprocessor flags
 override CPPFLAGS := \
     -I src \
     $(CPPFLAGS) \
     -MMD \
     -MP
  
-# Internal linker flags that should not be changed by the user.
+# Internal linker flags
 override LDFLAGS += \
     -m elf_x86_64 \
     -nostdlib \
@@ -80,7 +76,7 @@ override LDFLAGS += \
     -z max-page-size=0x1000 \
     -T linker.ld
  
-# Internal nasm flags that should not be changed by the user.
+# Internal nasm flags
 override NASMFLAGS += \
     -Wall \
     -f elf64
@@ -131,7 +127,10 @@ bootdisk:
 	mcopy -i image.hdd@@1M limine/BOOTIA32.EFI ::/EFI/BOOT
 
 qemu:
-	qemu-system-x86_64 -D qemutest.log -d int -M smm=off -hda image.hdd
+	qemu-system-x86_64 -D qemu.log -d int -M smm=off -hda image.hdd
+
+bochs:
+	bochs -f bochsrc.txt -q
 
 
 
@@ -140,3 +139,5 @@ qemu:
 clean:
 	rm -rf bin obj
 	rm -f image.hdd
+	rm -f bochslog.txt
+	rm -f qemu.log

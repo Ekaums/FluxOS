@@ -10,10 +10,12 @@ uint64_t gdt[5];
 
 
 // setup.asm
-void load_gdt(void);
+void load_gdtr(void);
 void reload_registers(void);
 
 
+// Fill up the gdt
+// TODO: Make a gdt struct and format this better smh
 static void create_descriptors(){
 
     gdt[0] = 0x0000000000000000; // Null segment descriptor 
@@ -24,6 +26,8 @@ static void create_descriptors(){
 }
 
 
+// Setup for loading gdtr
+// TODO: Move this to asm
 static void set_gdtr_registers(uint64_t *gdt){
     
     asm("mov %0, %%di\n\t" "mov %1, %%rsi"
@@ -38,8 +42,8 @@ void gdt_init(){
 
     create_descriptors();
     set_gdtr_registers(gdt);
-
-    load_gdt();
+    load_gdtr();
     reload_registers();
-
+    
+    asm("sti"); // Enable Interrupts. IS THIS NEEDED?
 }

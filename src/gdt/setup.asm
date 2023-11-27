@@ -1,3 +1,4 @@
+; TODO: Add descriptions
 global load_gdtr
 global reload_registers
 
@@ -29,4 +30,5 @@ reload_registers:
 	mov fs, ax
 	mov gs, ax
 	mov ss, ax
+	xchg bx, bx ; For Bochs Debugger
 	ret

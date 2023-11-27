@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 
-// TODO: Test this?
+
 uint8_t inb(uint16_t port){
     uint8_t result;
 
