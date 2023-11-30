@@ -6,14 +6,14 @@
 uint8_t inb(uint16_t port){
     uint8_t result;
 
-    asm ("inb %%dx, %%al" : "=a" (result) : "d" (port));
+    __asm__ ("inb %%dx, %%al" : "=a" (result) : "d" (port));
     return result;
 }
 
 
 // Output byte to serial port
 void outb(uint16_t port, uint8_t data){
-    asm ("outb %%al, %%dx" :   : "a" (data), "d" (port));
+    __asm__ ("outb %%al, %%dx" :   : "a" (data), "d" (port));
 }
 
 

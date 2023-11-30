@@ -6,6 +6,7 @@
 #include "serial/serial.h"
 #include "mem/mem.h"
 #include "gdt/gdt.h"
+#include "idt/idt.h"
 
  
 LIMINE_BASE_REVISION(1)
@@ -23,9 +24,9 @@ struct limine_framebuffer_request framebuffer_request = {
 
 // Halt and catch fire function.
 static void hcf(void) {
-    asm ("cli");
+    __asm__ ("cli");
     for (;;) {
-        asm ("hlt");
+        __asm__ ("hlt");
     }
 }
 
@@ -38,6 +39,10 @@ void _start(void) {
 
     serial_print(PORT, "Initializing GDT...\n\r");
     gdt_init();
+    serial_print(PORT, "Success.\n\r");
+
+    serial_print(PORT, "Initializing IDT...\n\r");
+    idt_init();
     serial_print(PORT, "Success.\n\n\r");
 
     serial_print(PORT, "Welcome to FluxOS");

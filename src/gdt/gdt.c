@@ -8,7 +8,6 @@
 
 uint64_t gdt[5];
 
-
 // setup.asm
 void load_gdtr(void);
 void reload_registers(void);
@@ -30,20 +29,18 @@ static void create_descriptors(){
 // TODO: Move this to asm
 static void set_gdtr_registers(uint64_t *gdt){
     
-    asm("mov %0, %%di\n\t" "mov %1, %%rsi"
+    __asm__ ("mov %0, %%di\n\t" "mov %1, %%rsi"
         : // no output
-        : "r" ((unsigned short)((GDT_ENTRIES * DESCRIPTOR_SIZE) - 1)), "r" ((unsigned long long)(gdt)) // input
+        : "r" ((uint16_t)((GDT_ENTRIES * DESCRIPTOR_SIZE) - 1)), "r" ((uint64_t)(gdt)) // input
         : "%di", "%rsi"); // clobbered registers
 }
 
 void gdt_init(){
 
-    asm("cli" ::: "memory"); // Disable interrupts
+    __asm__ ("cli" ::: "memory"); // Disable interrupts
 
     create_descriptors();
     set_gdtr_registers(gdt);
     load_gdtr();
     reload_registers();
-    
-    asm("sti"); // Enable Interrupts. IS THIS NEEDED?
 }

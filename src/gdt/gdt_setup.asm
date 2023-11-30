@@ -30,5 +30,4 @@ reload_registers:
 	mov fs, ax
 	mov gs, ax
 	mov ss, ax
-	xchg bx, bx ; For Bochs Debugger
 	ret
