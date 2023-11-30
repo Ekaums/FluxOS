@@ -1,4 +1,3 @@
-; TODO: ADD descriptions
 extern exception_handler
 
 section .text
@@ -56,7 +55,7 @@ section .data
 
 global isr_stub_table
 
-; Define an array pointers to all stubs
+; Define an array of pointers to all stubs
 isr_stub_table:
 %assign i 0 
 %rep    32 
