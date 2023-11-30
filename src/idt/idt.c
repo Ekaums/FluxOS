@@ -1,9 +1,11 @@
 #include "idt.h"
+#include "../serial/serial.h" // TODO: Make inc folder?
 
 #define GDT_OFFSET_KERNEL_CODE 0x08
 #define IDT_MAX_DESCRIPTORS 256
+#define PORT 0x3f8 // COM1
 
-static idtr_t idtr;
+static idtr_t idtr; // IDTR register
 __attribute__((aligned(0x10))) static idt_entry_t idt[256]; // IDT
 
 __attribute__((noreturn)) void exception_handler(void);
@@ -12,6 +14,8 @@ extern void *isr_stub_table[];
 
 
 void exception_handler() {
+    serial_print(PORT, "\n\rException Triggered :3");
+
         __asm__ ("cli");
     for (;;) {
         __asm__ ("hlt");
