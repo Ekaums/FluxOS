@@ -1,4 +1,4 @@
-/src/limine.h
+/limine
 /bin
 /obj
 /.vscode
@@ -6,4 +6,3 @@
 image.hdd
 qemu.log
 bochslog.txt
-limine/
